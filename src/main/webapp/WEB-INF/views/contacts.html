@@ -1,0 +1,263 @@
+<!-- %@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"% -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<meta th:replace="layout :: metaCharset" />
+<meta th:replace="layout :: metaXUAComp" />
+<meta th:replace="layout :: metaViewport" />
+<meta th:replace="layout :: metaDescription" />
+<meta th:replace="layout :: metaAuthor" />
+
+<!-- th:include="bootstrap :: headBootstrap" -->
+<!-- div th:include="bootstrap :: bootstrap"></div -->
+
+<!-- link th:href="@{/resources/css/clear.css}" rel="stylesheet" /-->
+<link th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet" />
+<link th:href="@{/resources/css/navbar-fixed-top.css}" rel="stylesheet" />
+<script th:src="@{/resources/js/jquery.min.js}"></script>
+<script th:src="@{/resources/js/bootstrap.min.js}"></script>
+<!--  -->
+<script th:src="@{/resources/js/utility.js}"></script>
+<style th:replace="layoutCM :: styleMain"></style>
+<style>
+.error {
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.msg {
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: #31708f;
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+}
+
+#contact-box {
+	width: 300px;
+	padding: 20px;
+	margin: 50px auto;
+	background: #fff;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border: 1px solid #000;
+}
+
+#footer {
+	width: 100%;
+	height: 5%;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	background: #ee5;
+	font-size: 62.5%;
+}
+
+.jumbotron h1 {
+	font-size: 200%;
+}
+
+.yellow {
+	background-color: yellow;
+}
+
+.red {
+	background-color: pink;
+}
+
+button:hover {
+	background: yellow;
+}
+</style>
+<script>
+	$(document).ready(function() {
+		$('#statusDiv').text('css and jquery work');
+		$('#statusDiv').addClass('msg');
+		$('ul.nav.navbar-nav li').eq(1).addClass('active');
+		$('#contactDisplay').toggleClass('edit view');
+		$('#toggleViewEdit').on("click", function() {
+			toggleViewEdit();
+		});
+		//$('.container').before($('#dynamicNavbar'));
+
+		for ( var obj in $('input.addPerson')) {
+			updateStatusBox(obj);
+			updateFocus(obj);
+		}
+
+	});
+	function toggleViewEdit() {
+		$('#contactDisplay').toggleClass('edit view');
+	}
+</script>
+
+<title>Kameron's Contact Manager</title>
+</head>
+<body>
+
+
+<div th:replace="layout :: #dynamicNavbar"></div>
+
+	<div class="container">
+		<!-- Fixed navbar -->
+		<div th:fragment="navbar"
+			class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span> <span
+							class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#"><span th:text="${projectName}"></span></a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav" th:utext="${nav}"></ul>
+					
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<div th:include="layout :: currentUser"></div>
+						</li>
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+
+		<div class="container">
+
+			<!-- Main component for a primary marketing message or call to action -->
+			<div class="jumbotron">
+				<h1>
+					Title : <span th:text="${title}"></span>
+				</h1>
+				<div id="messages" class="msg" th:unless="${message} == ''">
+					<h3>
+						<span th:text="${message}"></span>
+					</h3>
+				</div>
+				<!-- <div id="statusDiv" class="testCode">
+					<h3>css and js and NOT working /-:</h3>
+				</div> -->
+
+
+				<div id="contactDisplay" class="contact form edit left">
+					<!--  th:replace="layoutCM :: contactEdit" -->
+					<form name="addPerson" action="#" th:action="@{/contacts/add}"
+						th:object="${person}" method="get">
+						<table>
+							<tr>
+								<td><label th:text="#{label.firstname}">First:</label></td>
+								<td><input class="addPerson" type="text"
+									th:placeholder="#{label.firstname}" th:field="*{firstname}" /></td>
+							</tr>
+							<tr>
+								<td><label th:text="#{label.lastname}"></label></td>
+								<td><input class="addPerson" type="text"
+									th:placeholder="#{label.lastname}" th:field="*{lastname}" /></td>
+							</tr>
+							<tr>
+								<td><label th:text="#{label.email}"></label></td>
+								<td><input class="addPerson" type="text"
+									th:placeholder="#{label.email}" th:field="*{email}" /></td>
+							</tr>
+							<tr>
+								<td><label th:text="#{label.cellphone}"></label></td>
+								<td><input class="addPerson" type="text"
+									th:placeholder="#{label.cellphone}" th:field="*{cellphone}" /></td>
+							</tr>
+							<tr>
+								<td><label th:text="#{label.homephone}"></label></td>
+								<td><input class="addPerson" type="text"
+									th:placeholder="#{label.homephone}" th:field="*{homephone}" /></td>
+							</tr>
+							<tr>
+								<td colspan="2"><input type="submit" name="save"
+									th:value="#{label.add}" /></td>
+							</tr>
+						</table>
+					</form>
+					<!-- div class="submit">
+										<button type="submit" name="save" th:text="save">Add
+											Seed Starter</button>
+									</div-->
+					<h3>Persons</h3>
+					<div th:unless="${#lists.isEmpty(personList)}">
+						<table class="data">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Email</th>
+									<th>Telephone</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+
+								<tr data-ksm-personID="${pers.id}"
+									th:each="pers : ${personList}">
+									<form name="editPerson" action="#"
+										th:action="@{/contacts/edit}" th:object="${pers}"
+										th:method="get">
+										<td><input class="editPerson" type="text" name="lastname"
+											th:value="*{lastname}" /></td>
+										<td><input class="editPerson" type="text"
+											name="firstname" th:value="*{firstname}" /></td>
+										<td><input class="editPerson" type="text" name="email"
+											th:value="*{email}" /></td>
+										<td><input class="editPerson" type="text"
+											name="cellphone" th:value="*{cellphone}" /></td>
+										<td><input class="editPerson" type="text"
+											name="homephone" th:value="*{homephone}" /></td>
+										<td><input type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" />
+											<button type="submit" name="personId" th:value="*{id}"
+												th:text="#{label.edit}">Edit row</button></td>
+									</form>
+									<!-- (id=${pers.id}) -->
+									<td>
+										<form name="removePerson" action="#"
+											th:action="@{/contacts/delete}" th:object="${pers}"
+											th:method="post">
+											<input th:type="hidden" th:value="*{id}" /> <input
+												type="hidden" th:name="${_csrf.parameterName}"
+												th:value="${_csrf.token}" />
+											<button type="submit" name="personId" th:value="${pers.id}"
+												th:text="#{label.delete}">Remove row</button>
+										</form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+
+
+				<!-- input id="toggleViewEdit" type="button" value="toggle View/Edit" />
+				<p>
+					<a class="btn btn-lg btn-primary" href="../../components/#navbar"
+						role="button">View navbar docs &raquo;</a>
+				</p-->
+			</div>
+
+		</div>
+		<!-- /container -->
+	</div>
+
+
+	<div th:replace="layout :: footer"></div>
+</body>
+</html>

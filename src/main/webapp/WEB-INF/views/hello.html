@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}">
+	<div th:include="layout :: currentUser"></div>
+	</div>
+
+	<div th:include="layout :: titleMsg"></div>
+
+	<div th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}">
+		<!-- For login user -->
+		<div th:include="layout :: actionForm"></div>
+
+	</div>
+	<!-- /sec:authorize-->
+</body>
+<footer th:include="layout :: footer">
+</footer>
+</html>
